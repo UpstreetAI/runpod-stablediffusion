@@ -73,6 +73,16 @@ RUN --mount=type=cache,target=/root/.cache/pip \
 ADD src .
 
 COPY builder/cache.py /stable-diffusion-webui/cache.py
+RUN git clone https://github.com/light-and-ray/sd-webui-lcm-sampler /stable-diffusion-webui/extensions/sd-webui-lcm-sampler
+RUN git clone https://github.com/continue-revolution/sd-webui-animatediff /stable-diffusion-webui/extensions/sd-webui-animatediff
+RUN mkdir -p /stable-diffusion-webui/models/Lora
+RUN wget https://civitai.com/api/download/models/80635
+RUN mv '80635' /stable-diffusion-webui/models/Stable-diffusion/niji.safetensors
+RUN wget https://civitai.com/api/download/models/179257
+RUN mv '179257' /stable-diffusion-webui/models/Lora/gameiconlora.safetensors
+RUN wget https://civitai.com/api/download/models/96318
+RUN mv '96318' /stable-diffusion-webui/models/Lora/niji3d.safetensors
+
 RUN cd /stable-diffusion-webui && python cache.py --use-cpu=all --ckpt /model.safetensors
 
 # Cleanup section (Worker Template)
