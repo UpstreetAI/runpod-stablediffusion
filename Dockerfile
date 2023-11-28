@@ -83,7 +83,10 @@ RUN mv '179257' /stable-diffusion-webui/models/Lora/gameiconlora.safetensors
 RUN wget https://civitai.com/api/download/models/96318
 RUN mv '96318' /stable-diffusion-webui/models/Lora/niji3d.safetensors
 
-RUN cd /stable-diffusion-webui && python cache.py --use-cpu=all --ckpt /model.safetensors
+RUN cd /stable-diffusion-webui && python cache.py --use-cpu=all --ckpt /stable-diffusion-webui/models/Lora/niji3d.safetensors
+RUN cd /stable-diffusion-webui && python cache.py --use-cpu=all --ckpt /stable-diffusion-webui/models/Lora/gameiconlora.safetensors
+RUN cd /stable-diffusion-webui && python cache.py --use-cpu=all --ckpt /stable-diffusion-webui/models/Stable-diffusion/niji.safetensors
+
 
 # Cleanup section (Worker Template)
 RUN apt-get autoremove -y && \
