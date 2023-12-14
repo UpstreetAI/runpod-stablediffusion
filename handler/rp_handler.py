@@ -1,10 +1,10 @@
 import time
 
-import runpod
+# import runpod
 import requests
 from requests.adapters import HTTPAdapter, Retry
 
-LOCAL_URL = "http://127.0.0.1:3000/sdapi/v1"
+LOCAL_URL = "http://127.0.0.1:3000"
 
 automatic_session = requests.Session()
 retries = Retry(total=10, backoff_factor=0.1, status_forcelist=[502, 503, 504])
@@ -14,7 +14,8 @@ automatic_session.mount('http://', HTTPAdapter(max_retries=retries))
 # ---------------------------------------------------------------------------- #
 #                              Automatic Functions                             #
 # ---------------------------------------------------------------------------- #
-def wait_for_service(url):
+def wait_for_service():
+    url=f'{LOCAL_URL}/txt2img'
     '''
     Check if the service is ready to receive requests.
     '''
@@ -30,12 +31,21 @@ def wait_for_service(url):
         time.sleep(0.2)
 
 
-def run_inference(inference_request):
+def run_inference(type, url, inference_request):
     '''
-    Run inference on a request.
+        Run inference on a request.
     '''
-    response = automatic_session.post(url=f'{LOCAL_URL}/txt2img',
-                                      json=inference_request, timeout=600)
+    
+    if type == 'get':
+        response = automatic_session.get(url=f'{LOCAL_URL}/{url}',
+                                        json=inference_request, timeout=600)        
+    elif type == 'post':
+        response = automatic_session.get(url=f'{LOCAL_URL}/{url}',
+                                        json=inference_request, timeout=600)        
+    else:
+        response = automatic_session.post(url=f'{LOCAL_URL}/txt2img',
+                                        json=inference_request, timeout=600)
+
     return response.json()
 
 
@@ -53,9 +63,11 @@ def handler(event):
     return json
 
 
-if __name__ == "__main__":
-    wait_for_service(url=f'{LOCAL_URL}/txt2img')
 
-    print("WebUI API Service is ready. Starting RunPod...")
 
-    runpod.serverless.start({"handler": handler})
+# if __name__ == "__main__":
+#     wait_for_service(url=f'{LOCAL_URL}/txt2img')
+
+#     print("WebUI API Service is ready. Starting RunPod...")
+
+#     # runpod.serverless.start({"handler": handler})
